@@ -20,9 +20,12 @@ defmodule PhxTaskWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", PhxTaskWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", PhxTaskWeb do
+    pipe_through :api
+
+    get "/list", UserController, :index
+    post "/create", UserController, :create
+  end
 
   # Enables LiveDashboard only for development
   #
