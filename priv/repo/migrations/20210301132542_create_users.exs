@@ -10,5 +10,7 @@ defmodule PhxTask.Repo.Migrations.CreateUsers do
       timestamps()
     end
 
+    create unique_index(:users, [:login])
+
   end
 end

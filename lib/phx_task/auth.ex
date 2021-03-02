@@ -3,18 +3,27 @@ defmodule PhxTask.Auth do
   The Auth context.
   """
 
-  import Ecto.Query, warn: false
+  import Ecto.Query, only: [from: 2]
   alias PhxTask.Repo
-
   alias PhxTask.Auth.User
+
+  def authenticate_user(username, plain_text_password) do
+    query = from u in User, where: u.username == ^username
+    case Repo.one(query) do
+      nil ->
+        Pbkdf2.no_user_verify()
+        {:error, :invalid_credentials}
+      user ->
+        if (Pbkdf2.verify_pass(plain_text_password, user.password_hash)) do
+          {:ok, user}
+        else
+          {:error, :invalid_credentials}
+        end
+    end
+  end
 
   @doc """
   Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
 
   """
   def list_users do
@@ -50,9 +59,11 @@ defmodule PhxTask.Auth do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
+    changeset = User.changeset(%User{}, attrs)
+    Repo.insert(changeset)
+    # %User{}
+    # |> User.changeset(attrs)
+    # |> Repo.insert()
   end
 
   @doc """

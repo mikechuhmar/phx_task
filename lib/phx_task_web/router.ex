@@ -23,8 +23,10 @@ defmodule PhxTaskWeb.Router do
   scope "/api", PhxTaskWeb do
     pipe_through :api
 
-    get "/list", UserController, :index
-    post "/create", UserController, :create
+    get "/users_list", UserController, :index
+    post "/sign_up", UserController, :sign_up
+    get "/get_user", UserController, :show
+
   end
 
   # Enables LiveDashboard only for development

@@ -29,3 +29,8 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+#Guardian config
+config :phx_task, PhxTask.Auth.Guardian,
+  issuer: "auth_me",
+  secret_key: "f5xrXPtaqY/gYkbBXx+DxE0GkoeNevDQnLSaytRbjaL70ZiZcv2jcpnCmR0kf19G"
