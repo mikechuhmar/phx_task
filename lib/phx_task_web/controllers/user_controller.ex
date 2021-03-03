@@ -22,13 +22,13 @@ defmodule PhxTaskWeb.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "password" => password, "user" => user_params}) do
+  def update(conn, %{"id" => id, "password" => password, "user" => %{"name" => name, "password" => password}}) do
 
     current_user = Guardian.Plug.current_resource(conn)
     if current_user do
       case Auth.authorizate_for_change(current_user.id, id, password) do
         {:ok, user} ->
-          case Auth.update_user(user, user_params) do
+          case Auth.update_user(user, %{"name" => name, "password" => password}) do
             {:ok, user} ->
               render(conn, "show.json", user: user)
             {:error, changeset} ->
