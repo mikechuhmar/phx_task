@@ -17,6 +17,7 @@ defmodule PhxTask.Auth.User do
     user
     |> cast(attrs, [:login, :name, :password])
     |> validate_required([:login, :name, :password])
+    |> validate_length(:password, min: 6)
     |> unique_constraint(:login)
     |> generate_password_hash
   end
