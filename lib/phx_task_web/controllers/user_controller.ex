@@ -44,13 +44,22 @@ defmodule PhxTaskWeb.UserController do
 
   end
 
-  # def delete(conn, %{"id" => id}) do
-  #   user = Auth.get_user!(id)
+  def delete(conn, %{"id" => id, "password" => password}) do
 
-  #   with {:ok, %User{}} <- Auth.delete_user(user) do
-  #     send_resp(conn, :no_content, "")
-  #   end
-  # end
+    current_user = Guardian.Plug.current_resource(conn)
+    if current_user do
+      case Auth.authorizate_for_change(current_user.id, id, password) do
+        {:ok, user} ->
+          with {:ok, _} <- Auth.delete_user(user) do
+            render(conn, "success.json", message: :user_was_deleted)
+          end
+        {:error, reason} ->
+          render(conn, "error.json", reason: reason)
+      end
+    else
+      render(conn, "error.json", reason: :no_authenticated)
+    end
+  end
 
   def sign_up(conn, %{"user" => user_params}) do
 

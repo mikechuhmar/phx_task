@@ -31,6 +31,12 @@ defmodule PhxTaskWeb.UserView do
     }
   end
 
+  def render("success.json", %{message: message}) do
+    %{
+      message: message
+    }
+  end
+
   def render("error.json", %{reason: reason}) do
     %{
       status: :error,
