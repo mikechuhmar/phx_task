@@ -30,7 +30,8 @@ defmodule PhxTaskWeb.UserController do
         {:ok, user} ->
           case Auth.update_user(user, %{"name" => name, "password" => password}) do
             {:ok, user} ->
-              render(conn, "show.json", user: user)
+              # render(conn, "show.json", user: user)
+              render(conn, "success.json", user: user)
             {:error, changeset} ->
               render(conn, PhxTaskWeb.ChangesetView, "error.json", changeset: changeset)
           end
@@ -51,7 +52,8 @@ defmodule PhxTaskWeb.UserController do
       case Auth.authorizate_for_change(current_user.id, id, password) do
         {:ok, user} ->
           with {:ok, _} <- Auth.delete_user(user) do
-            render(conn, "success.json", message: :user_was_deleted)
+            # render(conn, "success.json", message: :user_was_deleted)
+            render(conn, "success.json", user: user)
           end
         {:error, reason} ->
           render(conn, "error.json", reason: reason)
@@ -86,7 +88,7 @@ defmodule PhxTaskWeb.UserController do
         {:ok, token, _} = Guardian.encode_and_sign(user)
         conn
         |> put_resp_header("location", Routes.user_path(conn, :show, [user]))
-        |> render("success.json", user: user, token: token)
+        |> render("show.json", user: user, token: token)
       {:error, reason} ->
         conn
         |> render("error.json", reason: to_string(reason))
@@ -100,7 +102,7 @@ defmodule PhxTaskWeb.UserController do
       {:ok, user, _} ->
         {:ok, token, _} = Guardian.encode_and_sign(user)
         conn
-        |> render("success.json", user: user, token: token)
+        |> render("show.json", user: user, token: token)
       {:error, _} ->
         conn
         |> render("error.json", reason: :invalid_token)

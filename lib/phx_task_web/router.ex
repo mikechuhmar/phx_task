@@ -40,7 +40,7 @@ defmodule PhxTaskWeb.Router do
     post "/sign_in_by_token", UserController, :sign_in_by_token
     post "/update_user", UserController, :update
     post "/delete_user", UserController, :delete
-    get "/some_action", UserController, :some_action
+    # get "/some_action", UserController, :some_action
 
 
   end

@@ -61,7 +61,6 @@ http://localhost:8000/api/sign_in
 
 ``` json
 {
-    "status": "ok",
     "token": "eyJhbGci....",
     "user": {
         "id": 1,
@@ -94,7 +93,6 @@ http://localhost:8000/api/sign_in_by_token
 
 ``` json
 {
-    "status": "ok",
     "token": "eyJhbGci....",
     "user": {
         "id": 1,
@@ -134,6 +132,7 @@ http://localhost:8000/api/update_user
 
 ``` json
 {
+    "status": "ok",
     "user": {
         "id": 1,
         "inserted_at": "2021-03-02T20:20:40",
@@ -168,7 +167,15 @@ http://localhost:8000/api/delete_user
 
 ``` json
 {
-    "message": "user_was_deleted"
+    "status": "ok",
+    "user": {
+        "id": 1,
+        "inserted_at": "2021-03-02T20:20:40",
+        "login": "login",
+        "name": "name",
+        "password_hash": "$pbkdf2-sha512$160000$1iq....",
+        "updated_at": "2021-03-03T17:34:43"
+    }
 }
 ```
 

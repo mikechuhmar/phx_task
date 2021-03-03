@@ -17,6 +17,13 @@ defmodule PhxTaskWeb.UserView do
     %{users: render_many(users, UserView, "user.json")}
   end
 
+  def render("show.json", %{user: user, token: token}) do
+    %{
+      user: render_one(user, UserView, "user.json"),
+      token: token
+    }
+  end
+
   def render("show.json", %{user: user}) do
     %{user: render_one(user, UserView, "user.json")}
   end
@@ -31,9 +38,10 @@ defmodule PhxTaskWeb.UserView do
     }
   end
 
-  def render("success.json", %{message: message}) do
+  def render("success.json", %{user: user}) do
     %{
-      message: message
+      status: :ok,
+      user: render_one(user, UserView, "user.json")
     }
   end
 
