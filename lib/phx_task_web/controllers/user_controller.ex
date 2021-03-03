@@ -2,10 +2,7 @@ defmodule PhxTaskWeb.UserController do
   use PhxTaskWeb, :controller
 
   alias PhxTask.Auth
-  alias PhxTask.Auth.User
   alias PhxTask.Auth.Guardian
-  alias PhxTask.Repo
-
   alias PhxTaskWeb.Router.Helpers, as: Routes
 
 
@@ -15,15 +12,6 @@ defmodule PhxTaskWeb.UserController do
     users = Auth.list_users()
     render(conn, "index.json", users: users)
   end
-
-  # def create(conn, %{"user" => user_params}) do
-  #   with {:ok, %User{} = user} <- Auth.create_user(user_params) do
-  #     conn
-  #     |> put_status(:created)
-  #     |> put_resp_header("location", Routes.user_path(conn, :show, [user]))
-  #     |> render("show.json", user: user)
-  #   end
-  # end
 
   def show(conn, %{"id" => id}) do
     user = Auth.get_user!(id)
@@ -48,10 +36,7 @@ defmodule PhxTaskWeb.UserController do
 
   def sign_up(conn, %{"user" => user_params}) do
 
-
-    # case Auth.create_user(user_params) do
-    changeset = User.changeset(%User{}, user_params)
-    case Repo.insert(changeset) do
+    case Auth.create_user(user_params) do
       {:ok, user} ->
         {:ok, token, _} = Guardian.encode_and_sign(user)
         conn
@@ -65,4 +50,41 @@ defmodule PhxTaskWeb.UserController do
     end
 
   end
+
+
+  def sign_in(conn, %{"user" => %{"login" => login, "password" => password}}) do
+
+    case Auth.authenticate_user(login, password) do
+      {:ok, user} ->
+        {:ok, token, _} = Guardian.encode_and_sign(user)
+        conn
+        |> put_resp_header("location", Routes.user_path(conn, :show, [user]))
+        |> render("success.json", user: user, token: token)
+      {:error, reason} ->
+        conn
+        |> render("error.json", reason: to_string(reason))
+    end
+
+  end
+
+  def sign_in_by_token(conn, %{"token" =>token}) do
+
+    case Guardian.resource_from_token(token) do
+      {:ok, user, _} ->
+        {:ok, token, _} = Guardian.encode_and_sign(user)
+        conn
+        |> render("success.json", user: user, token: token)
+      {:error, _} ->
+        conn
+        |> render("error.json", reason: :invalid_token)
+    end
+  end
+
+
+  # def some_action(conn, _params) do
+  #   var =Guardian.Plug.current_resource(conn)
+  #   conn
+  #   |> render("some_action.json", var: var.id)
+  # end
+
 end

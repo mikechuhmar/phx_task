@@ -30,7 +30,7 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
 
-#Guardian config
+# Guardian config
 config :phx_task, PhxTask.Auth.Guardian,
-  issuer: "auth_me",
-  secret_key: "f5xrXPtaqY/gYkbBXx+DxE0GkoeNevDQnLSaytRbjaL70ZiZcv2jcpnCmR0kf19G"
+  issuer: "phx_task",
+  secret_key: "ylqetREli9TWUNB524Efhc0DHp57OyV/i18Zh3dDPwQulfrBrwlicym5FsBGSkVN"

@@ -3,13 +3,11 @@ defmodule PhxTask.Auth do
   The Auth context.
   """
 
-  import Ecto.Query, only: [from: 2]
   alias PhxTask.Repo
   alias PhxTask.Auth.User
 
-  def authenticate_user(username, plain_text_password) do
-    query = from u in User, where: u.username == ^username
-    case Repo.one(query) do
+  def authenticate_user(login, plain_text_password) do
+    case Repo.get_by(User, login: login) do
       nil ->
         Pbkdf2.no_user_verify()
         {:error, :invalid_credentials}
@@ -61,9 +59,6 @@ defmodule PhxTask.Auth do
   def create_user(attrs \\ %{}) do
     changeset = User.changeset(%User{}, attrs)
     Repo.insert(changeset)
-    # %User{}
-    # |> User.changeset(attrs)
-    # |> Repo.insert()
   end
 
   @doc """

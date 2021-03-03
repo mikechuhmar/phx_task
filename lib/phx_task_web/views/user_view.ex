@@ -21,6 +21,8 @@ defmodule PhxTaskWeb.UserView do
     %{user: render_one(user, UserView, "user.json")}
   end
 
+
+
   def render("success.json", %{user: user, token: token}) do
     %{
       status: :ok,
@@ -29,11 +31,16 @@ defmodule PhxTaskWeb.UserView do
     }
   end
 
-  def render("error.json", %{changeset: changeset}) do
+  def render("error.json", %{reason: reason}) do
     %{
       status: :error,
-      changeset: changeset,
+      reason: reason
+    }
+  end
 
+  def render("some_action.json", %{var: var}) do
+    %{
+      var: var
     }
   end
 end

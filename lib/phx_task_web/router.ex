@@ -9,8 +9,18 @@ defmodule PhxTaskWeb.Router do
     plug :put_secure_browser_headers
   end
 
+
+
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :auth do
+    plug PhxTask.Auth.Pipeline
+  end
+
+  pipeline :ensure_auth do
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   scope "/", PhxTaskWeb do
@@ -21,11 +31,14 @@ defmodule PhxTaskWeb.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", PhxTaskWeb do
-    pipe_through :api
+    pipe_through [:api, :auth]
 
     get "/users_list", UserController, :index
     post "/sign_up", UserController, :sign_up
     get "/get_user", UserController, :show
+    post "/sign_in", UserController, :sign_in
+    post "/sign_in_by_token", UserController, :sign_in_by_token
+    # get "/some_action", UserController, :some_action
 
   end
 
