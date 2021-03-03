@@ -6,17 +6,40 @@ defmodule PhxTask.Auth do
   alias PhxTask.Repo
   alias PhxTask.Auth.User
 
-  def authenticate_user(login, plain_text_password) do
-    case Repo.get_by(User, login: login) do
-      nil ->
-        Pbkdf2.no_user_verify()
-        {:error, :invalid_credentials}
-      user ->
-        if (Pbkdf2.verify_pass(plain_text_password, user.password_hash)) do
-          {:ok, user}
-        else
-          {:error, :invalid_credentials}
-        end
+  @doc """
+  Creates a user.
+
+  """
+  def create_user(attrs \\ %{}) do
+    changeset = User.changeset(%User{}, attrs)
+    Repo.insert(changeset)
+  end
+
+  @doc """
+  Gets a single user by id.
+
+  """
+  def get_user(id) do
+    try do
+      user = Repo.get!(User, id)
+      {:ok, user}
+    rescue
+      Ecto.NoResultsError ->
+        {:error, :user_not_found}
+    end
+  end
+
+  @doc """
+  Gets a single user by login.
+
+  """
+  def get_user_by_login(login) do
+    try do
+      user = Repo.get_by!(User, login: login)
+      {:ok, user}
+    rescue
+      Ecto.NoResultsError ->
+        {:error, :user_not_found}
     end
   end
 
@@ -28,38 +51,41 @@ defmodule PhxTask.Auth do
     Repo.all(User)
   end
 
-  @doc """
-  Gets a single user.
 
-  Raises `Ecto.NoResultsError` if the User does not exist.
 
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs \\ %{}) do
-    changeset = User.changeset(%User{}, attrs)
-    Repo.insert(changeset)
+  def authenticate_user(login, password) do
+    case get_user_by_login(login) do
+      {:ok, user} ->
+        check_password(user, password)
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
+
+
+  def authorizate_for_change(current_id, user_id, password) do
+    if current_id == user_id do
+      case get_user(user_id) do
+        {:ok, user} ->
+          check_password(user, password)
+        {:error, reason} ->
+          {:error, reason}
+      end
+    else
+      {:error, :no_permission_to_change}
+    end
+
+
+  end
+
+  defp check_password(user, password) do
+    if (Pbkdf2.verify_pass(password, user.password_hash)) do
+      {:ok, user}
+    else
+      {:error, :invalid_credentials}
+    end
+  end
+
 
   @doc """
   Updates a user.

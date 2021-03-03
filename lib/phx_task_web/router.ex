@@ -33,12 +33,13 @@ defmodule PhxTaskWeb.Router do
   scope "/api", PhxTaskWeb do
     pipe_through [:api, :auth]
 
-    get "/users_list", UserController, :index
+    get "/users_list", UserController, :list
     post "/sign_up", UserController, :sign_up
     get "/get_user", UserController, :show
     post "/sign_in", UserController, :sign_in
     post "/sign_in_by_token", UserController, :sign_in_by_token
-    # get "/some_action", UserController, :some_action
+    post "/update_user", UserController, :update
+    get "/some_action", UserController, :some_action
 
   end
 

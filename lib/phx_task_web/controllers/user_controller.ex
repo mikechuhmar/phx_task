@@ -8,23 +8,41 @@ defmodule PhxTaskWeb.UserController do
 
   action_fallback PhxTaskWeb.FallbackController
 
-  def index(conn, _params) do
+  def list(conn, _params) do
     users = Auth.list_users()
     render(conn, "index.json", users: users)
   end
 
   def show(conn, %{"id" => id}) do
-    user = Auth.get_user!(id)
-    render(conn, "show.json", user: user)
+    case Auth.get_user(id) do
+      {:ok, user} ->
+        render(conn, "show.json", user: user)
+      {:error, reason} ->
+        render(conn, "error.json", reason: reason)
+    end
   end
 
-  # def update(conn, %{"id" => id, "user" => user_params}) do
-  #   user = Auth.get_user!(id)
+  def update(conn, %{"id" => id, "password" => password, "user" => user_params}) do
 
-  #   with {:ok, %User{} = user} <- Auth.update_user(user, user_params) do
-  #     render(conn, "show.json", user: user)
-  #   end
-  # end
+    current_user = Guardian.Plug.current_resource(conn)
+    if current_user do
+      case Auth.authorizate_for_change(current_user.id, id, password) do
+        {:ok, user} ->
+          case Auth.update_user(user, user_params) do
+            {:ok, user} ->
+              render(conn, "show.json", user: user)
+            {:error, changeset} ->
+              render(conn, PhxTaskWeb.ChangesetView, "error.json", changeset: changeset)
+          end
+        {:error, reason} ->
+          render(conn, "error.json", reason: reason)
+      end
+    else
+      render(conn, "error.json", reason: :no_authenticated)
+    end
+
+
+  end
 
   # def delete(conn, %{"id" => id}) do
   #   user = Auth.get_user!(id)
@@ -81,10 +99,10 @@ defmodule PhxTaskWeb.UserController do
   end
 
 
-  # def some_action(conn, _params) do
-  #   var =Guardian.Plug.current_resource(conn)
-  #   conn
-  #   |> render("some_action.json", var: var.id)
-  # end
+  def some_action(conn, _params) do
+    var =Guardian.Plug.current_resource(conn)
+    conn
+    |> render("some_action.json", var: var.id)
+  end
 
 end
