@@ -10,12 +10,13 @@ http://localhost:8000/api/sign_up
 
 ``` json
 // POST
+// Пароль не менее 6 символов
 
 {
 	"user": {
 		"login": "login",
 		"name": "name",
-		"password": "password" // не менее 6 символов
+		"password": "password" 
 	}
 }
 ```
@@ -122,10 +123,10 @@ http://localhost:8000/api/update_user
 {
     "id": 1,
     "password": "password",
-	  "user": {
-      "name": "name1",
-		  "password": "password1"
-	  }
+    "user": {
+        "name": "name1",
+        "password": "password1"
+    }
 }
 ```
 
@@ -197,9 +198,7 @@ http://localhost:8000/api/users_list
             "name": "name",
             "password_hash": "$pbkdf2-sha512$160000$ujF....",
             "updated_at": "2021-03-03T16:57:10"        
-        },
-        
-        ....
+        }
     ]
 }
 ```
