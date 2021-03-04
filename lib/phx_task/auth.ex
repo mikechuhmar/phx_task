@@ -5,6 +5,7 @@ defmodule PhxTask.Auth do
 
   alias PhxTask.Repo
   alias PhxTask.Auth.User
+  alias Argon2, as: Hash
 
   @doc """
   Creates a user.
@@ -76,7 +77,7 @@ defmodule PhxTask.Auth do
   end
 
   defp check_password(user, password) do
-    if Pbkdf2.verify_pass(password, user.password_hash) do
+    if Hash.verify_pass(password, user.password_hash) do
       {:ok, user}
     else
       {:error, :invalid_credentials}

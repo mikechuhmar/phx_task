@@ -1,7 +1,7 @@
 defmodule PhxTask.Auth.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Pbkdf2, as: Hash
+  alias Argon2, as: Hash
 
   schema "users" do
     field :login, :string

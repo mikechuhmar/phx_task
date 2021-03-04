@@ -4,6 +4,7 @@ defmodule PhxTaskWeb.UserController do
   alias PhxTask.Auth
   alias PhxTask.Auth.Guardian
   alias PhxTaskWeb.Router.Helpers, as: Routes
+  alias Argon2, as: Hash
 
   action_fallback PhxTaskWeb.FallbackController
 
@@ -22,11 +23,7 @@ defmodule PhxTaskWeb.UserController do
     end
   end
 
-  def update(conn, %{
-        "id" => id,
-        "password" => password,
-        "user" => %{"name" => name, "password" => password}
-      }) do
+  def update(conn, %{"id" => id, "password" => password, "user" => %{"name" => name, "password" => password}}) do
     current_user = Guardian.Plug.current_resource(conn)
 
     if current_user do
@@ -34,7 +31,6 @@ defmodule PhxTaskWeb.UserController do
         {:ok, user} ->
           case Auth.update_user(user, %{"name" => name, "password" => password}) do
             {:ok, user} ->
-              # render(conn, "show.json", user: user)
               render(conn, "success.json", user: user)
 
             {:error, changeset} ->

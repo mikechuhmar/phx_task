@@ -32,7 +32,7 @@ http://localhost:8000/api/sign_up
         "inserted_at": "2021-03-03T16:47:10",
         "login": "login",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$uBF....",
+        "password_hash": "$argon2id$v=19$m=13...",
         "updated_at": "2021-03-03T16:47:10"
     }
 }
@@ -67,7 +67,7 @@ http://localhost:8000/api/sign_in
         "inserted_at": "2021-03-03T16:47:10",
         "login": "login",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$uBF....",
+        "password_hash": "$argon2id$v=19$m=13...",
         "updated_at": "2021-03-03T16:47:10"
     }
 }
@@ -99,7 +99,7 @@ http://localhost:8000/api/sign_in_by_token
         "inserted_at": "2021-03-03T16:47:10",
         "login": "login",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$uBF....",
+        "password_hash": "$argon2id$v=19$m=13....",
         "updated_at": "2021-03-03T16:47:10"
     }
 }
@@ -138,7 +138,7 @@ http://localhost:8000/api/update_user
         "inserted_at": "2021-03-02T20:20:40",
         "login": "login",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$1iq....",
+        "password_hash": "$argon2id$v=19$m=13...",
         "updated_at": "2021-03-03T17:34:43"
     }
 }
@@ -173,7 +173,7 @@ http://localhost:8000/api/delete_user
         "inserted_at": "2021-03-02T20:20:40",
         "login": "login",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$1iq....",
+        "password_hash": "$argon2id$v=19$m=13...",
         "updated_at": "2021-03-03T17:34:43"
     }
 }
@@ -195,7 +195,7 @@ http://localhost:8000/api/users_list
             "inserted_at": "2021-03-03T16:47:10",
             "login": "login2",
             "name": "name",
-            "password_hash": "$pbkdf2-sha512$160000$RRv....",
+            "password_hash": "$argon2id$v=19$m=13...",
             "updated_at": "2021-03-03T16:47:10"        
         },
         {            
@@ -203,7 +203,7 @@ http://localhost:8000/api/users_list
             "inserted_at": "2021-03-03T16:57:10",
             "login": "login3",
             "name": "name",
-            "password_hash": "$pbkdf2-sha512$160000$ujF....",
+            "password_hash": "$argon2id$v=19$m=13...",
             "updated_at": "2021-03-03T16:57:10"        
         }
     ]
@@ -227,7 +227,7 @@ http://localhost:8000/api/get_user?id=2
         "inserted_at": "2021-03-03T16:47:10",
         "login": "login2",
         "name": "name",
-        "password_hash": "$pbkdf2-sha512$160000$RRv....",
+        "password_hash": "$argon2id$v=19$m=13...",
         "updated_at": "2021-03-03T16:47:10"            
 }
 ```

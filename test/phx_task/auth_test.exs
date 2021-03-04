@@ -2,7 +2,7 @@ defmodule PhxTask.AuthTest do
   use PhxTask.DataCase
 
   alias PhxTask.Auth
-  alias Pbkdf2, as: Hash
+  alias Argon2, as: Hash
 
   describe "users" do
     alias PhxTask.Auth.User

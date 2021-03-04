@@ -25,12 +25,12 @@ defmodule PhxTaskWeb.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  # describe "index" do
-  #   test "lists all users", %{conn: conn} do
-  #     conn = get(conn, Routes.user_path(conn, :index))
-  #     assert json_response(conn, 200)["data"] == []
-  #   end
-  # end
+  describe "list" do
+    test "get all users", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :list))
+      assert json_response(conn, 200)["users"] == []
+    end
+  end
 
   # describe "create user" do
   #   test "renders user when data is valid", %{conn: conn} do
@@ -89,8 +89,8 @@ defmodule PhxTaskWeb.UserControllerTest do
   #   end
   # end
 
-  # defp create_user(_) do
-  #   user = fixture(:user)
-  #   %{user: user}
-  # end
+  defp create_user(_) do
+    user = fixture(:user)
+    %{user: user}
+  end
 end

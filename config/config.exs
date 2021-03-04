@@ -33,4 +33,5 @@ import_config "#{Mix.env()}.exs"
 # Guardian config
 config :phx_task, PhxTask.Auth.Guardian,
   issuer: "phx_task",
+  ttl: {30, :minute},
   secret_key: "ylqetREli9TWUNB524Efhc0DHp57OyV/i18Zh3dDPwQulfrBrwlicym5FsBGSkVN"
