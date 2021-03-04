@@ -1,7 +1,7 @@
 defmodule PhxTask.Auth.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Pbkdf2
+  alias Pbkdf2, as: Hash
 
   schema "users" do
     field :login, :string
@@ -12,7 +12,6 @@ defmodule PhxTask.Auth.User do
     timestamps()
   end
 
-  @doc false
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:login, :name, :password])
@@ -22,21 +21,13 @@ defmodule PhxTask.Auth.User do
     |> generate_password_hash
   end
 
-  # defp validate_changeset(user) do
-  #   user
-  #   |> unique_constraint(:login)
-  #   |> generate_password_hash
-  # end
-
   defp generate_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :password_hash, Pbkdf2.hash_pwd_salt(password))
+        put_change(changeset, :password_hash, Hash.hash_pwd_salt(password))
+
       _ ->
         changeset
     end
   end
-
-
-
 end

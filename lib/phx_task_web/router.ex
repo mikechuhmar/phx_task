@@ -9,8 +9,6 @@ defmodule PhxTaskWeb.Router do
     plug :put_secure_browser_headers
   end
 
-
-
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -41,8 +39,6 @@ defmodule PhxTaskWeb.Router do
     post "/update_user", UserController, :update
     post "/delete_user", UserController, :delete
     # get "/some_action", UserController, :some_action
-
-
   end
 
   # Enables LiveDashboard only for development

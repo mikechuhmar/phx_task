@@ -3,7 +3,6 @@ defmodule PhxTask.Auth.Guardian do
 
   alias PhxTask.Auth
 
-
   def subject_for_token(user, _claims) do
     {:ok, to_string(user.id)}
   end

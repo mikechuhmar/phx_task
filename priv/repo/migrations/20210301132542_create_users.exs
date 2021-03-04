@@ -11,6 +11,5 @@ defmodule PhxTask.Repo.Migrations.CreateUsers do
     end
 
     create unique_index(:users, [:login])
-
   end
 end

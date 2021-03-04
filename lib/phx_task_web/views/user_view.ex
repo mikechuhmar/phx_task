@@ -8,6 +8,7 @@ defmodule PhxTaskWeb.UserView do
       login: user.login,
       name: user.name,
       password_hash: user.password_hash,
+      passwor: user.password,
       inserted_at: user.inserted_at,
       updated_at: user.updated_at
     }
@@ -27,8 +28,6 @@ defmodule PhxTaskWeb.UserView do
   def render("show.json", %{user: user}) do
     %{user: render_one(user, UserView, "user.json")}
   end
-
-
 
   def render("success.json", %{user: user, token: token}) do
     %{

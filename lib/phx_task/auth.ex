@@ -51,41 +51,37 @@ defmodule PhxTask.Auth do
     Repo.all(User)
   end
 
-
-
   def authenticate_user(login, password) do
     case get_user_by_login(login) do
       {:ok, user} ->
         check_password(user, password)
+
       {:error, reason} ->
         {:error, reason}
     end
   end
-
 
   def authorizate_for_change(current_id, user_id, password) do
     if current_id == user_id do
       case get_user(user_id) do
         {:ok, user} ->
           check_password(user, password)
+
         {:error, reason} ->
           {:error, reason}
       end
     else
       {:error, :no_permission_to_change}
     end
-
-
   end
 
   defp check_password(user, password) do
-    if (Pbkdf2.verify_pass(password, user.password_hash)) do
+    if Pbkdf2.verify_pass(password, user.password_hash) do
       {:ok, user}
     else
       {:error, :invalid_credentials}
     end
   end
-
 
   @doc """
   Updates a user.

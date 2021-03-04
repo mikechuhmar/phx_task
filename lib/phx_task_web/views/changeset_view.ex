@@ -16,6 +16,5 @@ defmodule PhxTaskWeb.ChangesetView do
       status: :error,
       errors: translate_errors(changeset)
     }
-
   end
 end
