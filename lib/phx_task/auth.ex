@@ -21,12 +21,9 @@ defmodule PhxTask.Auth do
 
   """
   def get_user(id) do
-    try do
-      user = Repo.get!(User, id)
-      {:ok, user}
-    rescue
-      Ecto.NoResultsError ->
-        {:error, :user_not_found}
+    case Repo.get(User, id) do
+      nil -> {:error, :user_not_found}
+      user -> {:ok, user}
     end
   end
 
@@ -35,12 +32,9 @@ defmodule PhxTask.Auth do
 
   """
   def get_user_by_login(login) do
-    try do
-      user = Repo.get_by!(User, login: login)
-      {:ok, user}
-    rescue
-      Ecto.NoResultsError ->
-        {:error, :user_not_found}
+    case Repo.get_by!(User, login: login) do
+      nil -> {:error, :user_not_found}
+      user -> {:ok, user}
     end
   end
 
