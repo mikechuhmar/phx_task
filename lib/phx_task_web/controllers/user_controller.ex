@@ -2,6 +2,7 @@ defmodule PhxTaskWeb.UserController do
   use PhxTaskWeb, :controller
 
   alias PhxTask.Auth
+  alias PhxTask.Auth.User
   alias PhxTask.Auth.Guardian
   alias PhxTaskWeb.Router.Helpers, as: Routes
   alias Argon2, as: Hash
@@ -23,44 +24,41 @@ defmodule PhxTaskWeb.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "password" => password, "user" => %{"name" => name, "password" => password}}) do
-    current_user = Guardian.Plug.current_resource(conn)
-
-    if current_user do
-      case Auth.authorizate_for_change(current_user.id, id, password) do
-        {:ok, user} ->
-          case Auth.update_user(user, %{"name" => name, "password" => password}) do
-            {:ok, user} ->
-              render(conn, "success.json", user: user)
-
-            {:error, changeset} ->
-              render(conn, PhxTaskWeb.ChangesetView, "error.json", changeset: changeset)
-          end
-
-        {:error, reason} ->
-          render(conn, "error.json", reason: reason)
-      end
+  def update(conn, %{
+        "id" => id,
+        "password" => password,
+        "user" => %{"name" => name, "password" => password}
+      }) do
+    with %User{} = current_user <- Guardian.Plug.current_resource(conn),
+         {:ok, user} <- Auth.authorizate_for_change(current_user.id, id, password),
+         {:ok, user} <- Auth.update_user(user, %{"name" => name, "password" => password}) do
+      render(conn, "success.json", user: user)
     else
-      render(conn, "error.json", reason: :no_authenticated)
+      nil ->
+        render(conn, "error.json", reason: :no_authenticated)
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, PhxTaskWeb.ChangesetView, "error.json", changeset: changeset)
+
+      {:error, reason} ->
+        render(conn, "error.json", reason: reason)
     end
   end
 
   def delete(conn, %{"id" => id, "password" => password}) do
-    current_user = Guardian.Plug.current_resource(conn)
-
-    if current_user do
-      case Auth.authorizate_for_change(current_user.id, id, password) do
-        {:ok, user} ->
-          with {:ok, _} <- Auth.delete_user(user) do
-            # render(conn, "success.json", message: :user_was_deleted)
-            render(conn, "success.json", user: user)
-          end
-
-        {:error, reason} ->
-          render(conn, "error.json", reason: reason)
-      end
+    with %User{} = current_user <- Guardian.Plug.current_resource(conn),
+         {:ok, user} <- Auth.authorizate_for_change(current_user.id, id, password),
+         {:ok, user} <- Auth.delete_user(user) do
+      render(conn, "success.json", user: user)
     else
-      render(conn, "error.json", reason: :no_authenticated)
+      nil ->
+        render(conn, "error.json", reason: :no_authenticated)
+
+      {:error, reason} ->
+        render(conn, "error.json", reason: reason)
+
+      _other ->
+        render(conn, "error.json", reason: :not_deleted)
     end
   end
 
